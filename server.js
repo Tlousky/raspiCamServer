@@ -4,9 +4,11 @@ var formidable = require("formidable");
 var util = require('util');
 var RaspiCam = require("raspicam");
 
-var camera     = new RaspiCam({ 
+var camera = new RaspiCam({ 
     "mode"   : "photo",
-    "output" : "/tmp/screenshot.jpg"
+    "output" : "/tmp/screenshot.jpg",
+    "height" : 720,
+    "width"  : 1280
 });
 
 var server = http.createServer(function (req, res) {
@@ -33,15 +35,17 @@ function processAllFieldsOfTheForm(req, res) {
     var form = new formidable.IncomingForm();
 
     camera.start();
-    camera.stop();
     
-    fs.readFile('img.html', function (err, data) {
-        res.writeHead(200, {
-            'Content-Type': 'text/html',
-                'Content-Length': data.length
+    camera.on("read", function(err, filename){ 
+        fs.readFile('img.html', function (err, data) {
+            res.writeHead(200, {
+                'Content-Type': 'text/html',
+                    'Content-Length': data.length
+            });
+            res.write(data);
+            res.end();
         });
-        res.write(data);
-        res.end();
+        camera.stop();
     });
 }
 
