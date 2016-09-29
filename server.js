@@ -4,6 +4,11 @@ var formidable = require("formidable");
 var util = require('util');
 var RaspiCam = require("raspicam");
 
+var camera     = new RaspiCam({ 
+    "mode"   : "photo",
+    "output" : "/tmp/screenshot.jpg"
+});
+
 var server = http.createServer(function (req, res) {
     if (req.method.toLowerCase() == 'get') {
         displayForm(res);
@@ -40,10 +45,10 @@ function processAllFieldsOfTheForm(req, res) {
     });
 }
 
-/*
 server.listen(1185);
 console.log("server listening on 1185");
 
+/*
 var express  = require('express');
 var RaspiCam = require("raspicam");
 
